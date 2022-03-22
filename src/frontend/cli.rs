@@ -407,7 +407,7 @@ pub fn main() {
         Command::Console(cmd) => {
             let manifest_path = get_manifest_path_or_exit(cmd.manifest_path);
             let start_repl = true;
-            let (_, _, project_manifest, _) =
+            let (session, _, project_manifest, _) =
                 match load_session(manifest_path, start_repl, &Network::Devnet) {
                     Ok(res) => res,
                     Err(e) => {
@@ -426,6 +426,25 @@ pub fn main() {
                         &project_manifest.project.authors,
                     ),
                 ));
+
+                #[cfg(feature = "telemetry")]
+                {
+                    let mut debug_count = 0;
+                    for command in session.executed {
+                        if command.starts_with("::debug") {
+                            debug_count += 1;
+                        }
+                    }
+                    if debug_count > 0 {
+                        telemetry_report_event(DeveloperUsageEvent::DebugStarted(
+                            DeveloperUsageDigest::new(
+                                &project_manifest.project.name,
+                                &project_manifest.project.authors,
+                            ),
+                            debug_count,
+                        ));
+                    }
+                }
             }
         }
         Command::Check(cmd) if cmd.file.is_some() => {
