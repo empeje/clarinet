@@ -481,7 +481,7 @@ Inside of the console (`clarinet console`), there is a debugger for stepping thr
   - **Continue**: Continue execution until hitting a breakpoint or completing execution (`continue` or `c` command)
 - Evaluate and print the result of any expression (`print` or `p` command)
 
-To initiate a debug sessionm, first enter the REPL console using:
+To initiate a debug session, first enter the REPL console using:
 
 ```
 clarinet console
